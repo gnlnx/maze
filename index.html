@@ -1,0 +1,237 @@
+<html>
+	<head>
+		<title>maze</title>
+		<script type="text/javascript">
+		var mainrow;
+		var toprow;
+		var bottomow;
+		var current;
+		var maze = [
+			//0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 1, 1, 1, 1, 0,
+			0, 2, 0, 0, 0, 0, 1, 0,
+			0, 1, 1, 1, 1, 1, 1, 0,
+			0, 0, 0, 1, 0, 0, 0, 0,
+			0, 0, 0, 1, 1, 1, 0, 0,
+			0, 1, 1, 1, 0, 1, 0, 0,
+			0, 1, 0, 0, 0, 1, 2, 0,
+			0, 0, 0, 0, 0, 0, 0, 0,
+		];
+
+		var rows = 9;
+		var cols = 8;
+
+		var elements = 8;
+
+		var pos = 0;
+		var oldPos = 0;
+		var value = 0;
+		var oldValue = 0;
+
+		var moves = 0;
+		var oldMoves = 0;
+
+		var x = 1;
+		var oldX = 0;
+		var y = 2;
+		var oldY = 0;
+
+		// controls
+		var LEFT_ARROW = 37;
+		var RIGHT_ARROW = 39;
+		var UP_ARROW = 38;
+		var DOWN_ARROW = 40;
+		var H_KEY = 72;
+		var J_KEY = 74;
+		var K_KEY = 75;
+		var L_KEY = 76;
+
+		// maze values
+		var WALL = 0;
+		var PATH = 1;
+		var START_END = 2;
+
+		var GetColor = function( cellValue ) {
+			var color = "#333";
+			switch( cellValue ) {
+				case WALL:
+					color = "#400";
+					break;
+				case PATH:
+					color = "#040";
+					break;
+				case START_END:
+					color = "#004";
+					break;
+			}
+
+			return color;
+		}
+		var StartCells = function() {
+			pos = x + ( y * elements );
+			value = ( pos != undefined ) ? maze[ pos ] : 3;
+
+			UpdateCells();
+		}
+
+		var UpdateCells = function() {
+			current.style.backgroundColor = GetColor( value );
+
+			pos = (x-1) + ( y * elements );
+			value = ( pos != undefined ) ? maze[ pos ] : 3;
+			mainrow[0].style.backgroundColor = GetColor( value );
+			
+			pos = (x+1) + ( y * elements );
+			value = ( pos != undefined ) ? maze[ pos ] : 3;
+			mainrow[2].style.backgroundColor = GetColor( value );
+
+			// set top row
+			pos = (x-1) + ( (y-1) * elements );
+			value = ( pos != undefined ) ? maze[ pos ] : 3;
+			toprow[0].style.backgroundColor = GetColor( value );
+
+			pos = x + ( (y-1) * elements );
+			value = ( pos != undefined ) ? maze[ pos ] : 3;
+			toprow[1].style.backgroundColor = GetColor( value );
+
+			pos = (x+1) + ( (y-1) * elements );
+			value = ( pos != undefined ) ? maze[ pos ] : 3;
+			toprow[2].style.backgroundColor = GetColor( value );
+
+			// set bottom row
+			pos = (x-1) + ( (y+1) * elements );
+			value = ( pos != undefined ) ? maze[ pos ] : 3;
+			bottomrow[0].style.backgroundColor = GetColor( value );
+
+			pos = (x) + ( (y+1) * elements );
+			value = ( pos != undefined ) ? maze[ pos ] : 3;
+			bottomrow[1].style.backgroundColor = GetColor( value );
+
+			pos = (x+1) + ( (y+1) * elements );
+			value = ( pos != undefined ) ? maze[ pos ] : 3;
+			bottomrow[2].style.backgroundColor = GetColor( value );
+		}
+
+		document.addEventListener( "DOMContentLoaded", function( e ) {
+			current = document.getElementById( "current" );
+			mainrow = current.parentNode;
+			toprow = mainrow.previousElementSibling.cells;
+			bottomrow = mainrow.nextElementSibling.cells;
+			mainrow = mainrow.cells;
+
+			// set starting cells
+			StartCells();
+			
+			// create keypress event listener
+			document.addEventListener( "keyup", function( e ) {
+				// save old values
+				oldX = x;
+				oldY = y;
+				oldPos = pos;
+				oldValue = value;
+				oldMoves = moves;
+
+				switch( e.keyCode || e.which ) {
+					case H_KEY:
+					case LEFT_ARROW:
+						--x;
+						x = ( x < 0 ) ? 0 : x;
+						++moves;
+						break;
+					case L_KEY:
+					case RIGHT_ARROW:
+						++x;
+						x = ( x > cols - 1 ) ? cols - 1 : x;
+						++moves;
+						break;
+					case K_KEY:
+					case UP_ARROW:
+						--y;
+						y = ( y < 0 ) ? 0 : y;
+						++moves;
+						break;
+					case J_KEY:
+					case DOWN_ARROW:
+						++y;
+						y = ( y > rows - 1 ) ? rows - 1 : y;
+						++moves;
+						break;
+				}
+
+				// set current cell
+				pos = x + ( y * elements );
+				value = maze[ pos ];
+
+				if( value < 1 ) {
+					x = oldX;
+					y = oldY;
+					pos = oldPos;
+					value = oldValue;
+					moves = oldMoves;
+					return;
+				}
+
+				// update moves counter
+				document.getElementById( "moves" ).innerHTML = moves;
+
+				// update cells
+				UpdateCells();
+			}, false );
+
+		}, false );
+		</script>
+		<style type="text/css">
+		* { 
+			margin: 0; 
+			padding: 0; 
+		}
+		body { 
+			background-color: #333;
+		}
+		#maze {
+			/*
+			width: 480px;
+			height: 800px;
+			*/
+			width: 100%;
+			height: 100%;
+			border-collapse: collapse;
+		}
+		table#maze tr td {
+			background-color: #222;
+			color: #555;
+		}
+		table#maze tr td#current {
+			border: 8px solid #bb0;
+			width: 75%;
+			height: 75%;
+		}
+		#hud {
+			position: absolute;
+			background-color: #222;
+			color: #dd0;
+			font-family: monospace;
+			font-size: 2em;
+			padding: 0.3em;
+			opacity: 0.7;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="hud">
+			moves: <span id="moves">0</span>
+		</div>
+		<table id="maze">
+			<tr id="maze-top">
+				<td>&nbsp;</td> <td>&nbsp;</td> <td>&nbsp;</td>
+			</tr>
+			<tr id="maze-mid">
+				<td>&nbsp;</td> <td id="current">&nbsp;</td> <td>&nbsp;</td>
+			</tr>
+			<tr id="maze-bottom">
+				<td>&nbsp;</td> <td>&nbsp;</td> <td>&nbsp;</td>
+			</tr>
+		</table>
+	</body>
+</html>
