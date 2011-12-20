@@ -66,12 +66,13 @@
 		var END_COLOR = "#880";
 		var NONE_COLOR = "#333";
 
-
 		var GetMaze = function() {
 			level_creator.postMessage( "new_maze" );
 			level_creator.onmessage = function( e ) {
 				console.log( e.data );
-				maze = e.data.maze;
+				maze = e.data.maze.path;
+				x = e.data.maze.x;
+				y = e.data.maze.y;
 			}
 		}
 
@@ -94,6 +95,7 @@
 
 			return color;
 		}
+
 		var StartCells = function() {
 			GetMaze();
 
@@ -107,6 +109,7 @@
 			var currentColor = GetColor( value );
 			if( currentColor == END_COLOR ) {
 				bWin = true;
+				document.getElementById( "moves" ).innerHTML = 0;
 				document.getElementById( "total-moves" ).innerHTML = moves;
 				document.getElementById( "hud" ).style.display = "none";
 				document.getElementById( "win" ).style.display = "block";
@@ -157,7 +160,7 @@
 
 			// set starting cells
 			StartCells();
-			
+
 			// create keypress event listener
 			document.addEventListener( "keyup", function( e ) {
 				if( bWin ) {
@@ -216,6 +219,20 @@
 
 				// update cells
 				UpdateCells();
+			}, false );
+
+			// next level
+			document.getElementById( "next" ).addEventListener( "click", function( e ) {
+				oldX = 0;
+				oldY = 0;
+				moves = 0;
+				oldMoves = 0;
+
+				bWin = false;
+				document.getElementById( "hud" ).style.display = "";
+				document.getElementById( "win" ).style.display = "none";
+				StartCells();
+				return false;
 			}, false );
 
 		}, false );
@@ -297,7 +314,7 @@
 			<br />
 			total moves: <span id="total-moves">0</span><br />
 			<br />
-			<a href="#" id="next">&gt;&gt; next level &gt;&gt;</a>
+			<a href="/" id="next">&gt;&gt; next level &gt;&gt;</a>
 		</div>
 	</body>
 </html>
