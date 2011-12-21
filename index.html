@@ -16,7 +16,7 @@
 			0, 0, 0, 0, 0, 0, 0, 0,
 		];
 
-		var level_creator = new Worker( "level_creator.js" );
+		var level_loader = new Worker( "level_loader.js" );
 
 		var bWin = false;
 
@@ -67,8 +67,8 @@
 		var NONE_COLOR = "#333";
 
 		var GetMaze = function() {
-			level_creator.postMessage( "new_maze" );
-			level_creator.onmessage = function( e ) {
+			level_loader.postMessage( "new_maze" );
+			level_loader.onmessage = function( e ) {
 				console.log( e.data );
 				maze = e.data.maze.path;
 				x = e.data.maze.x;
