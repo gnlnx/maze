@@ -47,6 +47,7 @@ var H_KEY = 72;
 var J_KEY = 74;
 var K_KEY = 75;
 var L_KEY = 76;
+var N_KEY = 78;
 
 // maze values
 var WALL = 0;
@@ -159,6 +160,11 @@ document.addEventListener( "DOMContentLoaded", function( e ) {
 	// create keypress event listener
 	document.addEventListener( "keyup", function( e ) {
 		if( bWin ) {
+			switch( e.keyCode || e.which ) {
+				case N_KEY:
+					NextLevel();
+					break;
+			}
 			return;
 		}
 
@@ -217,7 +223,7 @@ document.addEventListener( "DOMContentLoaded", function( e ) {
 	}, false );
 
 	// next level
-	document.getElementById( "next" ).addEventListener( "click", function( e ) {
+	var NextLevel = function() {
 		oldX = 0;
 		oldY = 0;
 		moves = 0;
@@ -227,7 +233,11 @@ document.addEventListener( "DOMContentLoaded", function( e ) {
 		document.getElementById( "hud" ).style.display = "";
 		document.getElementById( "win" ).style.display = "none";
 		StartCells();
+
 		return false;
+	}
+	document.getElementById( "next" ).addEventListener( "click", function( e ) {
+		NextLevel();
 	}, false );
 
 }, false );
