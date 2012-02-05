@@ -147,6 +147,20 @@ var UpdateCells = function() {
 	bottomrow[2].style.backgroundColor = GetColor( value );
 }
 
+var NextLevel = function() {
+	oldX = 0;
+	oldY = 0;
+	moves = 0;
+	oldMoves = 0;
+
+	bWin = false;
+	document.getElementById( "hud" ).style.display = "";
+	document.getElementById( "win" ).style.display = "none";
+	StartCells();
+
+	return false;
+}
+
 document.addEventListener( "DOMContentLoaded", function( e ) {
 	current = document.getElementById( "current" );
 	mainrow = current.parentNode;
@@ -223,19 +237,6 @@ document.addEventListener( "DOMContentLoaded", function( e ) {
 	}, false );
 
 	// next level
-	var NextLevel = function() {
-		oldX = 0;
-		oldY = 0;
-		moves = 0;
-		oldMoves = 0;
-
-		bWin = false;
-		document.getElementById( "hud" ).style.display = "";
-		document.getElementById( "win" ).style.display = "none";
-		StartCells();
-
-		return false;
-	}
 	document.getElementById( "next" ).addEventListener( "click", function( e ) {
 		NextLevel();
 	}, false );
